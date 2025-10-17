@@ -490,48 +490,465 @@
             font-weight: bold;
         }
         
-        @media (max-width: 768px) {
-            .question-display {
-                font-size: 2rem;
+        /* Tablet Portrait */
+        @media (max-width: 1024px) and (orientation: portrait) {
+            .game-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .start-btn {
+                padding: 12px 25px;
+                font-size: 1.1rem;
+            }
+            
+            .score-board {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
                 padding: 15px;
+            }
+        }
+        
+        /* Tablet Landscape */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .game-container {
+                padding: 15px;
+                margin: 5px;
+            }
+            
+            .title {
+                font-size: 2rem;
+                margin-bottom: 5px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+            
+            .score-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .score-item {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Mobile Portrait */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .game-container {
+                padding: 15px;
+                margin: 5px;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .start-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                margin: 5px;
+            }
+            
+            .score-board {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            .score-item {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .question-display {
+                font-size: 1.8rem;
+                padding: 15px;
+                margin-bottom: 20px;
             }
             
             .number-box {
                 width: 60px;
                 height: 60px;
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             
             .operator {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .answer-input {
                 width: 80px;
                 height: 50px;
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             
-            .stage-step {
-                padding: 10px 15px;
-                font-size: 0.9rem;
+            .decomposition-area {
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+            
+            .check-btn, .next-btn {
+                padding: 12px 20px;
+                font-size: 1.1rem;
             }
             
             .horizontal-line {
-                width: 300px;
+                width: 280px;
             }
             
             .arc-container {
-                width: 300px;
+                width: 280px;
                 top: -60px;
             }
             
             .first-arc, .second-arc {
-                width: 150px;
+                width: 140px;
             }
             
             .second-arc {
-                left: 150px;
+                left: 140px;
+            }
+            
+            .number-input-box {
+                width: 80px;
+                height: 50px;
+                font-size: 1.4rem;
+            }
+            
+            .number-input-box input {
+                font-size: 1.4rem;
+            }
+            
+            .arc-label {
+                min-width: 60px;
+                padding: 3px 8px;
+            }
+            
+            .arc-label input {
+                width: 45px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Mobile Landscape */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .game-container {
+                padding: 10px;
+                margin: 2px;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+                margin-bottom: 5px;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+            
+            .start-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                margin: 3px;
+            }
+            
+            .score-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 5px;
+                padding: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .score-item {
+                padding: 6px;
+                font-size: 0.8rem;
+            }
+            
+            .stage-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .stage-header h3 {
+                font-size: 1.1rem;
+                margin: 5px 0;
+            }
+            
+            .stage-header p {
+                font-size: 0.9rem;
+                margin: 5px 0;
+            }
+            
+            .question-display {
+                font-size: 1.5rem;
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .number-box {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .operator {
+                font-size: 1.5rem;
+            }
+            
+            .answer-input {
+                width: 70px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .decomposition-area {
+                gap: 6px;
+                margin-bottom: 15px;
+            }
+            
+            .check-btn, .next-btn {
+                padding: 8px 15px;
+                font-size: 1rem;
+            }
+            
+            .horizontal-line {
+                width: 250px;
+            }
+            
+            .arc-container {
+                width: 250px;
+                top: -50px;
+                height: 80px;
+            }
+            
+            .first-arc, .second-arc {
+                width: 125px;
+                height: 50px;
+            }
+            
+            .second-arc {
+                left: 125px;
+            }
+            
+            .number-input-box {
+                width: 70px;
+                height: 45px;
+                font-size: 1.2rem;
+                top: 20px;
+            }
+            
+            .number-input-box input {
+                font-size: 1.2rem;
+            }
+            
+            .arc-label {
+                min-width: 50px;
+                padding: 2px 6px;
+                top: -8px;
+            }
+            
+            .arc-label input {
+                width: 40px;
+                font-size: 0.8rem;
+            }
+            
+            .number-line-explanation {
+                padding: 10px;
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Small Mobile Portrait */
+        @media (max-width: 480px) and (orientation: portrait) {
+            .game-container {
+                padding: 10px;
+                margin: 2px;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .start-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .score-board {
+                grid-template-columns: 1fr 1fr;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .score-item {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+            
+            .question-display {
+                font-size: 1.4rem;
+                padding: 10px;
+            }
+            
+            .number-box {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .operator {
+                font-size: 1.4rem;
+            }
+            
+            .answer-input {
+                width: 70px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .horizontal-line {
+                width: 240px;
+            }
+            
+            .arc-container {
+                width: 240px;
+            }
+            
+            .first-arc, .second-arc {
+                width: 120px;
+            }
+            
+            .second-arc {
+                left: 120px;
+            }
+        }
+        
+        /* Very Small Mobile Landscape */
+        @media (max-width: 480px) and (orientation: landscape) {
+            .game-container {
+                padding: 5px;
+                margin: 1px;
+            }
+            
+            .title {
+                font-size: 1.3rem;
+                margin-bottom: 3px;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 8px;
+            }
+            
+            .start-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                margin: 2px;
+            }
+            
+            .score-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 3px;
+                padding: 5px;
+                margin-bottom: 10px;
+            }
+            
+            .score-item {
+                padding: 4px;
+                font-size: 0.7rem;
+            }
+            
+            .stage-section {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .question-display {
+                font-size: 1.2rem;
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .number-box {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .operator {
+                font-size: 1.2rem;
+            }
+            
+            .answer-input {
+                width: 60px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .check-btn, .next-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .horizontal-line {
+                width: 200px;
+            }
+            
+            .arc-container {
+                width: 200px;
+                top: -40px;
+                height: 60px;
+            }
+            
+            .first-arc, .second-arc {
+                width: 100px;
+                height: 40px;
+            }
+            
+            .second-arc {
+                left: 100px;
+            }
+            
+            .number-input-box {
+                width: 60px;
+                height: 40px;
+                font-size: 1rem;
+                top: 15px;
+            }
+            
+            .number-input-box input {
+                font-size: 1rem;
+            }
+            
+            .arc-label {
+                min-width: 40px;
+                padding: 1px 4px;
+                top: -6px;
+            }
+            
+            .arc-label input {
+                width: 30px;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -1027,5 +1444,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9901dedc6461b6d1',t:'MTc2MDcyNTg2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9902d4e6c0afb6d1',t:'MTc2MDczNTkzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
