@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة التفكيك والتجميع - ثلاث مراحل</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+        
+        .all-stages {
+            display: none;
+        }
+        
+        .stage-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 3px solid #e2e8f0;
+        }
+        
+        .stage-section.active {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .stage-section.completed {
+            border-color: #38a169;
+            background: #c6f6d5;
+        }
+        
+        .stage-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stage-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .stage-section.completed .stage-number {
+            background: #38a169;
+        }
+        
+        .stage-section.active .stage-number {
+            background: #48bb78;
+        }
+        
+        .start-btn {
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .score-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .score-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .correct-score { background: #c6f6d5; color: #22543d; }
+        .wrong-score { background: #fed7d7; color: #742a2a; }
+        .stage-score { background: #bee3f8; color: #2a4365; }
+        .total-score { background: #e6fffa; color: #234e52; }
+        
+        .stage-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stage-step {
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stage-step.active {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .stage-step.completed {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .stage-step.inactive {
+            background: #e2e8f0;
+            color: #718096;
+        }
+        
+        .game-area {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .question-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 3px dashed #e2e8f0;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .stage-content {
+            margin-bottom: 30px;
+        }
+        
+        .decomposition-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            direction: ltr;
+        }
+        
+        .number-box {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background: white;
+            color: #4a5568;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .first-number { border-color: #48bb78; background: #f0fff4; }
+        .second-number { border-color: #4299e1; background: #f0f9ff; }
+        .tens-box { border-color: #ed8936; background: #fffaf0; }
+        .units-box { border-color: #805ad5; background: #faf5ff; }
+        .result-box { border-color: #e53e3e; background: #fff5f5; }
+        
+        .operator {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .input-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .answer-input {
+            width: 100px;
+            height: 60px;
+            font-size: 2rem;
+            text-align: left;
+            border: 3px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr;
+            padding-left: 10px;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .check-btn {
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .check-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .correct {
+            color: #22543d;
+            background: #c6f6d5;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        
+        .wrong {
+            color: #742a2a;
+            background: #fed7d7;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        
+        .next-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stage-explanation {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stage-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .stage-description {
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+        
+        .number-line-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+            direction: ltr;
+        }
+        
+        .horizontal-line {
+            position: relative;
+            width: 600px;
+            height: 4px;
+            background: #4a5568;
+            border-radius: 2px;
+        }
+        
+        .line-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            top: -4px;
+            transform: translateX(-50%);
+        }
+        
+        .start-point { left: 0; }
+        .middle-point { left: 50%; }
+        .end-point { left: 100%; }
+        
+        .number-input-box {
+            position: absolute;
+            top: 25px;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 60px;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .number-input-box:hover {
+            border-color: #48bb78;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .number-input-box input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr;
+            padding: 0;
+        }
+        
+        .number-input-box input:focus {
+            outline: none;
+        }
+        
+        .number-input-box input:focus {
+            color: #667eea;
+        }
+        
+        .number-input-box.filled {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .arc-container {
+            position: relative;
+            width: 600px;
+            height: 100px;
+            top: -80px;
+        }
+        
+        .arc {
+            position: absolute;
+            border: 3px solid #667eea;
+            border-bottom: none;
+            border-radius: 150px 150px 0 0;
+            background: transparent;
+        }
+        
+        .first-arc {
+            left: 0;
+            width: 300px;
+            height: 60px;
+            top: 0px;
+        }
+        
+        .second-arc {
+            left: 300px;
+            width: 300px;
+            height: 60px;
+            top: 0px;
+        }
+        
+        .arc-label {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 10px;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .arc-label input {
+            width: 60px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1rem;
+            direction: ltr;
+        }
+        
+        .arc-label input:focus {
+            outline: none;
+        }
+        
+        .number-line-explanation {
+            text-align: center;
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: #1e40af;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .question-display {
+                font-size: 2rem;
+                padding: 15px;
+            }
+            
+            .number-box {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .operator {
+                font-size: 2rem;
+            }
+            
+            .answer-input {
+                width: 80px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .stage-step {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .horizontal-line {
+                width: 300px;
+            }
+            
+            .arc-container {
+                width: 300px;
+                top: -60px;
+            }
+            
+            .first-arc, .second-arc {
+                width: 150px;
+            }
+            
+            .second-arc {
+                left: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="game-container">
+        <header class="header">
+            <h1 class="title">🧮 لعبة التفكيك والتجميع</h1>
+            <p class="subtitle">تعلم جمع الأرقام بطريقتين مختلفتين</p>
+            
+            <div class="method-selection" id="methodSelection">
+                <h3 style="color: #4a5568; margin-bottom: 20px;">اختر طريقة التعلم:</h3>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <button class="start-btn" onclick="startMethod1()">
+                        📊 الطريقة الأولى: التفكيك التقليدي
+                    </button>
+                    <button class="start-btn" onclick="startMethod2()">
+                        📈 الطريقة الثانية: الشريط العددي والأقواس
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="score-board" id="scoreBoard" style="display: none;">
+            <div class="score-item correct-score">
+                <div>إجابات صحيحة ✅</div>
+                <div id="correctScore">0</div>
+            </div>
+            <div class="score-item wrong-score">
+                <div>إجابات خاطئة ❌</div>
+                <div id="wrongScore">0</div>
+            </div>
+            <div class="score-item stage-score">
+                <div>المرحلة الحالية 📊</div>
+                <div id="currentStage">1</div>
+            </div>
+            <div class="score-item total-score">
+                <div>النقاط الكلية 🏆</div>
+                <div id="totalScore">0</div>
+            </div>
+        </div>
+        
+        <!-- Method 1: Traditional Decomposition -->
+        <div class="all-stages" id="method1Stages" style="display: none;">
+            <div class="method-header">
+                <h2 style="text-align: center; color: #4a5568; margin-bottom: 30px;">📊 الطريقة الأولى: التفكيك التقليدي</h2>
+            </div>
+            
+            <!-- Stage 1: Decomposition -->
+            <div class="stage-section active" id="m1stageSection1">
+                <div class="stage-header">
+                    <span class="stage-number">1</span>
+                    <h3>المرحلة الأولى: التفكيك</h3>
+                    <p>فكك كل رقم إلى عشرات ووحدات</p>
+                </div>
+                <div class="question-display" id="m1questionDisplay1"></div>
+                <div class="stage-content" id="m1stageContent1"></div>
+                <div class="feedback" id="m1feedback1"></div>
+            </div>
+            
+            <!-- Stage 2: Separate Addition -->
+            <div class="stage-section" id="m1stageSection2">
+                <div class="stage-header">
+                    <span class="stage-number">2</span>
+                    <h3>المرحلة الثانية: الجمع المنفصل</h3>
+                    <p>اجمع العشرات مع العشرات والوحدات مع الوحدات</p>
+                </div>
+                <div class="question-display" id="m1questionDisplay2"></div>
+                <div class="stage-content" id="m1stageContent2"></div>
+                <div class="feedback" id="m1feedback2"></div>
+            </div>
+            
+            <!-- Stage 3: Final Result -->
+            <div class="stage-section" id="m1stageSection3">
+                <div class="stage-header">
+                    <span class="stage-number">3</span>
+                    <h3>المرحلة الثالثة: النتيجة النهائية</h3>
+                    <p>احسب النتيجة النهائية</p>
+                </div>
+                <div class="question-display" id="m1questionDisplay3"></div>
+                <div class="stage-content" id="m1stageContent3"></div>
+                <div class="feedback" id="m1feedback3"></div>
+            </div>
+        </div>
+        
+        <!-- Method 2: Horizontal Line Method -->
+        <div class="all-stages" id="method2Stages" style="display: none;">
+            <div class="method-header">
+                <h2 style="text-align: center; color: #4a5568; margin-bottom: 30px;">📈 الطريقة الثانية: الشريط العددي والأقواس</h2>
+            </div>
+            
+            <!-- Single Stage: Number Line Method -->
+            <div class="stage-section active" id="m2stageSection1">
+                <div class="stage-header">
+                    <span class="stage-number">1</span>
+                    <h3>طريقة الشريط العددي</h3>
+                    <p>استخدم الشريط العددي والأقواس للجمع</p>
+                </div>
+                <div class="question-display" id="m2questionDisplay1"></div>
+                <div class="stage-content" id="m2stageContent1"></div>
+                <div class="feedback" id="m2feedback1"></div>
+            </div>
+        </div>
+        
+        <div class="control-buttons" style="text-align: center; margin-top: 20px;">
+            <button class="next-btn" id="newQuestionBtn" onclick="generateNewQuestion()" style="display: none;">
+                سؤال جديد 🔄
+            </button>
+            <button class="next-btn" id="backToMenuBtn" onclick="backToMenu()" style="display: none; margin-right: 15px; background: linear-gradient(45deg, #667eea, #764ba2);">
+                العودة للقائمة الرئيسية 🏠
+            </button>
+        </div>
+    </main>
+
+    <script>
+        let firstNumber = 0;
+        let secondNumber = 0;
+        let firstTens = 0, firstUnits = 0;
+        let secondTens = 0, secondUnits = 0;
+        let tensSum = 0, unitsSum = 0;
+        let finalResult = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let totalScore = 0;
+        let currentMethod = 0; // 1 for traditional, 2 for horizontal line
+        let stage1Completed = false;
+        let stage2Completed = false;
+        let stage3Completed = false;
+        
+        function startMethod1() {
+            currentMethod = 1;
+            document.getElementById('methodSelection').style.display = 'none';
+            document.getElementById('scoreBoard').style.display = 'grid';
+            document.getElementById('method1Stages').style.display = 'block';
+            document.getElementById('backToMenuBtn').style.display = 'inline-block';
+            
+            generateNewQuestion();
+        }
+        
+        function startMethod2() {
+            currentMethod = 2;
+            document.getElementById('methodSelection').style.display = 'none';
+            document.getElementById('scoreBoard').style.display = 'grid';
+            document.getElementById('method2Stages').style.display = 'block';
+            document.getElementById('backToMenuBtn').style.display = 'inline-block';
+            
+            generateNewQuestion();
+        }
+        
+        function backToMenu() {
+            // Hide all method stages
+            document.getElementById('method1Stages').style.display = 'none';
+            document.getElementById('method2Stages').style.display = 'none';
+            document.getElementById('scoreBoard').style.display = 'none';
+            document.getElementById('newQuestionBtn').style.display = 'none';
+            document.getElementById('backToMenuBtn').style.display = 'none';
+            
+            // Show method selection
+            document.getElementById('methodSelection').style.display = 'block';
+            
+            // Reset scores
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            totalScore = 0;
+            updateScore();
+        }
+        
+        function generateNewQuestion() {
+            // Generate two random numbers from 10 to 99
+            firstNumber = Math.floor(Math.random() * 90) + 10;
+            secondNumber = Math.floor(Math.random() * 90) + 10;
+            
+            // Decompose numbers
+            firstTens = Math.floor(firstNumber / 10) * 10;
+            firstUnits = firstNumber % 10;
+            secondTens = Math.floor(secondNumber / 10) * 10;
+            secondUnits = secondNumber % 10;
+            
+            // Calculate sums
+            tensSum = firstTens + secondTens;
+            unitsSum = firstUnits + secondUnits;
+            finalResult = firstNumber + secondNumber;
+            
+            // Reset stages
+            stage1Completed = false;
+            stage2Completed = false;
+            stage3Completed = false;
+            
+            resetStages();
+            
+            if (currentMethod === 1) {
+                showMethod1Stages();
+            } else if (currentMethod === 2) {
+                showMethod2Stage();
+            }
+            
+            document.getElementById('newQuestionBtn').style.display = 'none';
+        }
+        
+        function resetStages() {
+            if (currentMethod === 1) {
+                // Reset method 1 stage classes
+                document.getElementById('m1stageSection1').className = 'stage-section active';
+                document.getElementById('m1stageSection2').className = 'stage-section';
+                document.getElementById('m1stageSection3').className = 'stage-section';
+                
+                // Clear method 1 feedbacks
+                document.getElementById('m1feedback1').innerHTML = '';
+                document.getElementById('m1feedback2').innerHTML = '';
+                document.getElementById('m1feedback3').innerHTML = '';
+            } else if (currentMethod === 2) {
+                // Reset method 2 stage classes
+                document.getElementById('m2stageSection1').className = 'stage-section active';
+                
+                // Clear method 2 feedback
+                document.getElementById('m2feedback1').innerHTML = '';
+            }
+        }
+        
+        function showMethod1Stages() {
+            showM1Stage1();
+            showM1Stage2();
+            showM1Stage3();
+        }
+        
+        function showMethod2Stage() {
+            showM2Stage1();
+        }
+        
+        function showM1Stage1() {
+            document.getElementById('m1questionDisplay1').textContent = `${firstNumber} + ${secondNumber} = ?`;
+            
+            const content = `
+                <div class="decomposition-area">
+                    <div class="number-box first-number">${firstNumber}</div>
+                    <div class="operator">=</div>
+                    <input type="number" class="answer-input" id="m1firstTens" placeholder="?" min="0" max="90">
+                    <div class="operator">+</div>
+                    <input type="number" class="answer-input" id="m1firstUnits" placeholder="?" min="0" max="9">
+                </div>
+                
+                <div class="decomposition-area">
+                    <div class="number-box second-number">${secondNumber}</div>
+                    <div class="operator">=</div>
+                    <input type="number" class="answer-input" id="m1secondTens" placeholder="?" min="0" max="90">
+                    <div class="operator">+</div>
+                    <input type="number" class="answer-input" id="m1secondUnits" placeholder="?" min="0" max="9">
+                </div>
+                
+                <button class="check-btn" onclick="checkM1Stage1()">تحقق من التفكيك ✓</button>
+            `;
+            
+            document.getElementById('m1stageContent1').innerHTML = content;
+        }
+        
+        function showM1Stage2() {
+            if (stage1Completed) {
+                document.getElementById('m1questionDisplay2').textContent = `${firstNumber} + ${secondNumber} = ${firstTens} + ${firstUnits} + ${secondTens} + ${secondUnits}`;
+                
+                const content = `
+                    <div class="decomposition-area">
+                        <div class="number-box tens-box">${firstTens}</div>
+                        <div class="operator">+</div>
+                        <div class="number-box tens-box">${secondTens}</div>
+                        <div class="operator">=</div>
+                        <input type="number" class="answer-input" id="m1tensResult" placeholder="?" min="0" max="180">
+                    </div>
+                    
+                    <div class="decomposition-area">
+                        <div class="number-box units-box">${firstUnits}</div>
+                        <div class="operator">+</div>
+                        <div class="number-box units-box">${secondUnits}</div>
+                        <div class="operator">=</div>
+                        <input type="number" class="answer-input" id="m1unitsResult" placeholder="?" min="0" max="18">
+                    </div>
+                    
+                    <button class="check-btn" onclick="checkM1Stage2()">تحقق من الجمع ✓</button>
+                `;
+                
+                document.getElementById('m1stageContent2').innerHTML = content;
+            } else {
+                document.getElementById('m1questionDisplay2').textContent = 'أكمل المرحلة الأولى أولاً';
+                document.getElementById('m1stageContent2').innerHTML = '<p style="text-align: center; color: #718096; font-size: 1.2rem;">يجب إكمال المرحلة الأولى قبل الانتقال لهذه المرحلة</p>';
+            }
+        }
+        
+        function showM1Stage3() {
+            if (stage2Completed) {
+                document.getElementById('m1questionDisplay3').textContent = `${tensSum} + ${unitsSum} = ?`;
+                
+                const content = `
+                    <div class="decomposition-area">
+                        <div class="number-box tens-box">${tensSum}</div>
+                        <div class="operator">+</div>
+                        <div class="number-box units-box">${unitsSum}</div>
+                        <div class="operator">=</div>
+                        <input type="number" class="answer-input" id="m1finalAnswer" placeholder="?" min="0" max="198">
+                    </div>
+                    
+                    <button class="check-btn" onclick="checkM1Stage3()">تحقق من النتيجة ✓</button>
+                `;
+                
+                document.getElementById('m1stageContent3').innerHTML = content;
+            } else {
+                document.getElementById('m1questionDisplay3').textContent = 'أكمل المرحلة الثانية أولاً';
+                document.getElementById('m1stageContent3').innerHTML = '<p style="text-align: center; color: #718096; font-size: 1.2rem;">يجب إكمال المرحلة الثانية قبل الانتقال لهذه المرحلة</p>';
+            }
+        }
+        
+        function showM2Stage1() {
+            document.getElementById('m2questionDisplay1').textContent = `${firstNumber} + ${secondNumber} = ?`;
+            
+            const content = `
+                <div class="number-line-explanation">
+                    اكتب الأعداد في المربعات تحت الشريط العددي، واكتب العمليات في الأقواس فوق الشريط
+                </div>
+                
+                <div class="number-line-container">
+                    <div class="horizontal-line">
+                        <div class="line-point start-point">
+                            <div class="number-input-box">
+                                <input type="number" id="m2startNumber" placeholder="?" min="0" max="99">
+                            </div>
+                        </div>
+                        <div class="line-point middle-point">
+                            <div class="number-input-box">
+                                <input type="number" id="m2middleNumber" placeholder="?" min="0" max="199">
+                            </div>
+                        </div>
+                        <div class="line-point end-point">
+                            <div class="number-input-box">
+                                <input type="number" id="m2endNumber" placeholder="?" min="0" max="199">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arc-container">
+                        <div class="arc first-arc">
+                            <div class="arc-label">
+                                <input type="text" id="m2firstArcLabel" placeholder="+" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="arc second-arc">
+                            <div class="arc-label">
+                                <input type="text" id="m2secondArcLabel" placeholder="+" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="check-btn" onclick="checkM2Stage1()">تحقق من الشريط العددي ✓</button>
+            `;
+            
+            document.getElementById('m2stageContent1').innerHTML = content;
+        }
+        
+        function checkM1Stage1() {
+            if (stage1Completed) return;
+            
+            const firstTensInput = parseInt(document.getElementById('m1firstTens').value) || 0;
+            const firstUnitsInput = parseInt(document.getElementById('m1firstUnits').value) || 0;
+            const secondTensInput = parseInt(document.getElementById('m1secondTens').value) || 0;
+            const secondUnitsInput = parseInt(document.getElementById('m1secondUnits').value) || 0;
+            
+            stage1Completed = true;
+            const feedbackElement = document.getElementById('m1feedback1');
+            
+            if (firstTensInput === firstTens && firstUnitsInput === firstUnits && 
+                secondTensInput === secondTens && secondUnitsInput === secondUnits) {
+                
+                correctAnswers++;
+                totalScore += 20;
+                feedbackElement.innerHTML = `<div class="correct">✅ ممتاز! التفكيك صحيح<br>${firstNumber} = ${firstTens} + ${firstUnits}<br>${secondNumber} = ${secondTens} + ${secondUnits}</div>`;
+                document.getElementById('m1stageSection1').className = 'stage-section completed';
+                document.getElementById('m1stageSection2').className = 'stage-section active';
+                showM1Stage2(); // Update stage 2 content
+            } else {
+                wrongAnswers++;
+                feedbackElement.innerHTML = `<div class="wrong">❌ خطأ! الإجابة الصحيحة:<br>${firstNumber} = ${firstTens} + ${firstUnits}<br>${secondNumber} = ${secondTens} + ${secondUnits}</div>`;
+                document.getElementById('m1stageSection1').className = 'stage-section completed';
+                document.getElementById('m1stageSection2').className = 'stage-section active';
+                showM1Stage2(); // Update stage 2 content
+            }
+            
+            updateScore();
+            document.getElementById('currentStage').textContent = '2';
+        }
+        
+        function checkM1Stage2() {
+            if (stage2Completed) return;
+            
+            const tensResultInput = parseInt(document.getElementById('m1tensResult').value) || 0;
+            const unitsResultInput = parseInt(document.getElementById('m1unitsResult').value) || 0;
+            
+            stage2Completed = true;
+            const feedbackElement = document.getElementById('m1feedback2');
+            
+            if (tensResultInput === tensSum && unitsResultInput === unitsSum) {
+                correctAnswers++;
+                totalScore += 20;
+                feedbackElement.innerHTML = `<div class="correct">✅ ممتاز! الجمع صحيح<br>العشرات: ${firstTens} + ${secondTens} = ${tensSum}<br>الوحدات: ${firstUnits} + ${secondUnits} = ${unitsSum}</div>`;
+                document.getElementById('m1stageSection2').className = 'stage-section completed';
+                document.getElementById('m1stageSection3').className = 'stage-section active';
+                showM1Stage3(); // Update stage 3 content
+            } else {
+                wrongAnswers++;
+                feedbackElement.innerHTML = `<div class="wrong">❌ خطأ! الإجابة الصحيحة:<br>العشرات: ${firstTens} + ${secondTens} = ${tensSum}<br>الوحدات: ${firstUnits} + ${secondUnits} = ${unitsSum}</div>`;
+                document.getElementById('m1stageSection2').className = 'stage-section completed';
+                document.getElementById('m1stageSection3').className = 'stage-section active';
+                showM1Stage3(); // Update stage 3 content
+            }
+            
+            updateScore();
+            document.getElementById('currentStage').textContent = '3';
+        }
+        
+        function checkM1Stage3() {
+            if (stage3Completed) return;
+            
+            const finalAnswerInput = parseInt(document.getElementById('m1finalAnswer').value) || 0;
+            
+            stage3Completed = true;
+            const feedbackElement = document.getElementById('m1feedback3');
+            
+            if (finalAnswerInput === finalResult) {
+                correctAnswers++;
+                totalScore += 30;
+                feedbackElement.innerHTML = `<div class="correct">🎉 ممتاز! النتيجة النهائية صحيحة<br>${tensSum} + ${unitsSum} = ${finalResult}<br>لقد أكملت جميع المراحل بنجاح!</div>`;
+                document.getElementById('m1stageSection3').className = 'stage-section completed';
+                document.getElementById('newQuestionBtn').style.display = 'block';
+            } else {
+                wrongAnswers++;
+                feedbackElement.innerHTML = `<div class="wrong">❌ خطأ! الإجابة الصحيحة:<br>${tensSum} + ${unitsSum} = ${finalResult}<br>${firstNumber} + ${secondNumber} = ${finalResult}</div>`;
+                document.getElementById('m1stageSection3').className = 'stage-section completed';
+                document.getElementById('newQuestionBtn').style.display = 'block';
+            }
+            
+            updateScore();
+            document.getElementById('currentStage').textContent = 'مكتملة';
+        }
+        
+        function checkM2Stage1() {
+            if (stage1Completed) return;
+            
+            const startNumberInput = parseInt(document.getElementById('m2startNumber').value) || 0;
+            const middleNumberInput = parseInt(document.getElementById('m2middleNumber').value) || 0;
+            const endNumberInput = parseInt(document.getElementById('m2endNumber').value) || 0;
+            const firstArcLabelInput = document.getElementById('m2firstArcLabel').value.trim();
+            const secondArcLabelInput = document.getElementById('m2secondArcLabel').value.trim();
+            
+            stage1Completed = true;
+            const feedbackElement = document.getElementById('m2feedback1');
+            
+            const expectedMiddle = firstNumber + secondTens;
+            const expectedFirstArc = secondTens.toString();
+            const expectedSecondArc = secondUnits.toString();
+            
+            if (startNumberInput === firstNumber && 
+                middleNumberInput === expectedMiddle && 
+                endNumberInput === finalResult &&
+                (firstArcLabelInput === expectedFirstArc || firstArcLabelInput === `+${expectedFirstArc}`) &&
+                (secondArcLabelInput === expectedSecondArc || secondArcLabelInput === `+${expectedSecondArc}`)) {
+                
+                correctAnswers++;
+                totalScore += 50;
+                feedbackElement.innerHTML = `<div class="correct">🎉 ممتاز! طريقة الشريط العددي صحيحة تماماً!<br>${firstNumber} → ${expectedMiddle} → ${finalResult}<br>لقد أكملت الطريقة بنجاح!</div>`;
+                document.getElementById('m2stageSection1').className = 'stage-section completed';
+                document.getElementById('newQuestionBtn').style.display = 'block';
+            } else {
+                wrongAnswers++;
+                feedbackElement.innerHTML = `<div class="wrong">❌ خطأ! الطريقة الصحيحة:<br>ابدأ بـ ${firstNumber} ← أضف ${secondTens} ← أضف ${secondUnits}<br>${firstNumber} → ${expectedMiddle} → ${finalResult}</div>`;
+                document.getElementById('m2stageSection1').className = 'stage-section completed';
+                document.getElementById('newQuestionBtn').style.display = 'block';
+            }
+            
+            updateScore();
+            document.getElementById('currentStage').textContent = 'مكتملة';
+        }
+        
+        function updateScore() {
+            document.getElementById('correctScore').textContent = correctAnswers;
+            document.getElementById('wrongScore').textContent = wrongAnswers;
+            document.getElementById('totalScore').textContent = totalScore;
+        }
+        
+        // Add event listeners for Enter key
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeButton = document.querySelector('.stage-section.active .check-btn:not([disabled])');
+                if (activeButton) {
+                    activeButton.click();
+                }
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9901dedc6461b6d1',t:'MTc2MDcyNTg2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
